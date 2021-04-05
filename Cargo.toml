@@ -1,0 +1,14 @@
+[package]
+name = "adaptif"
+description = "My super awesome game!"
+version = "0.1.0"
+authors = ["Matt DeBoard <matt.deboard@gmail.com>"]
+readme = "README.md"
+edition = "2018"
+
+[dependencies]
+gdnative = "0.9.3"
+gdnative-project-utils = "0.1.4"
+
+[lib]
+crate-type = ["cdylib"]

@@ -1,0 +1,50 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "editor.formatOnSave": true,
+    "editor.tokenColorCustomizations": {
+      "[Kimbie Dark]": {
+        "textMateRules": [
+          {
+            "scope": "support.constant.core.rust",
+            "settings": {
+              "foreground": "#91b18a",
+            }
+          },
+          {
+            "scope": "keyword.operator.misc.rust",
+            "settings": {
+              "foreground": "#b15030"
+            }
+          },
+          {
+            "scope": "meta.attribute.rust",
+            "settings": {
+              "foreground": "#b1948a",
+              "fontStyle": "italic"
+            }
+          },
+        ]
+      }
+    },
+    "godot_tools.editor_path": "c:\\Users\\matt\\Desktop\\Godot_v3.2.3-stable_win64.exe",
+    "rust.rustfmt_path": "h:\\adaptif\\rustfmt.toml",
+    "rust-client.engine": "rust-analyzer",
+    "editor.tabSize": 2,
+    "rust-analyzer.cargo.allFeatures": true,
+    "terminal.integrated.automationShell.windows": "c:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "rust-assist.formatOnSave": true,
+    "rust-analyzer.callInfo.full": false,
+  },
+  "extensions": {
+    "recommendations": [
+      "matklad.rust-analyzer",
+      "serayuzgur.crates",
+      "bungcip.better-toml"
+    ]
+  }
+}
