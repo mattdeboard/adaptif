@@ -1,11 +1,11 @@
 use gdnative::{
   api::{InputEvent, InputEventMouseButton, Viewport},
-  core_types::VariantArray,
+  prelude::{ClassBuilder, Signal},
   Ref,
 };
 use godot::api::GlobalConstants;
 use godot::methods;
-use godot::prelude::{FromVariant, NativeClass, Node2D};
+use godot::prelude::{FromVariant, NativeClass, Node2D, ToVariant};
 
 #[derive(Debug, ToVariant, FromVariant)]
 enum RigidBody2DMode {
@@ -17,6 +17,7 @@ enum RigidBody2DMode {
 
 #[derive(Debug, FromVariant, ToVariant, NativeClass)]
 #[inherit(Node2D)]
+#[register_with(Self::register_signals)]
 pub struct PickableUnit {
   held: bool,
   mode: RigidBody2DMode,
@@ -32,12 +33,6 @@ impl PickableUnit {
   }
 
   #[export]
-  fn _ready(&self, _owner: &Node2D) {
-    _owner.add_user_signal("clicked", VariantArray::new_shared());
-    godot_warn!("_ready called")
-  }
-
-  #[export]
   fn _input_event(
     &self,
     owner: &Node2D,
@@ -48,19 +43,24 @@ impl PickableUnit {
     let ev = unsafe { event.assume_safe() };
     if let Some(e) = ev.cast::<InputEventMouseButton>() {
       if e.button_index() == GlobalConstants::BUTTON_LEFT && e.is_pressed() {
-        owner.emit_signal("clicked", &[]);
+        owner.emit_signal("clicked", &[self.to_variant()]);
       }
     }
   }
 
   #[export]
-  pub fn pickup(&mut self, _owner: &Node2D) {
+  fn _physics_process(&self, owner: &Node2D, _delta: f64) {
     if self.held {
-      return;
+      owner.set_global_position(owner.get_global_mouse_position());
     }
+  }
 
-    self.mode = RigidBody2DMode::Static;
-    self.held = true;
+  #[export]
+  pub fn pickup(&mut self, _owner: &Node2D) {
+    if !self.held {
+      self.mode = RigidBody2DMode::Static;
+      self.held = true;
+    }
   }
 
   #[export]
@@ -80,10 +80,10 @@ impl PickableUnit {
     }
   }
 
-  // fn _init(_owner: Node2D) -> Self {
-  //   PickableUnit {
-  //     held: false,
-  //     mode: RigidBody2DMode::Rigid,
-  //   }
-  // }
+  fn register_signals(builder: &ClassBuilder<Self>) {
+    builder.add_signal(Signal {
+      name: "clicked",
+      args: &[],
+    });
+  }
 }

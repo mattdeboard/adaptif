@@ -1,24 +1,7 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://main_scene.gdns" type="Script" id=1]
 [ext_resource path="res://scenes/PickableUnit.tscn" type="PackedScene" id=2]
-[ext_resource path="res://assets/dot-dot.png" type="Texture" id=3]
-
-[sub_resource type="TileSet" id=1]
-0/name = "dot-dot.png 0"
-0/texture = ExtResource( 3 )
-0/tex_offset = Vector2( 0, 0 )
-0/modulate = Color( 1, 1, 1, 1 )
-0/region = Rect2( 0, 0, 32, 32 )
-0/tile_mode = 0
-0/occluder_offset = Vector2( 0, 0 )
-0/navigation_offset = Vector2( 0, 0 )
-0/shape_offset = Vector2( 0, 0 )
-0/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-0/shape_one_way = false
-0/shape_one_way_margin = 0.0
-0/shapes = [  ]
-0/z_index = 0
 
 [node name="Main" type="Node2D"]
 position = Vector2( 1, -1 )
@@ -36,8 +19,3 @@ __meta__ = {
 
 [node name="PickableUnit" parent="." instance=ExtResource( 2 )]
 position = Vector2( 331.04, 213.574 )
-
-[node name="TileMap" type="TileMap" parent="."]
-tile_set = SubResource( 1 )
-format = 1
-tile_data = PoolIntArray( 393223, 0, 0, 458759, 0, 0, 524295, 0, 0, 589831, 0, 0, 655367, 0, 0, 720903, 0, 0, 786439, 0, 0, 851975, 0, 0, 917511, 0, 0, 983047, 0, 0 )

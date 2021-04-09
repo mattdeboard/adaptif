@@ -1,7 +1,7 @@
 use crate::scenes::pickable_unit::PickableUnit;
 use gdnative::{
-  api::{GlobalConstants, InputEvent, InputEventMouseButton, Object},
-  core_types::{GodotString, VariantArray},
+  api::{GlobalConstants, InputEvent, InputEventMouseButton},
+  core_types::VariantArray,
   Ref, TRef,
 };
 use godot::methods;
@@ -20,33 +20,23 @@ impl MainScene {
   }
 
   #[export]
-  fn _ready(&self, _owner: TRef<Node2D>) {
-    if let Some(tree) = _owner.get_tree() {
-      let ref _tree = unsafe { tree.assume_safe() };
-      let nodes = _tree.get_nodes_in_group("pickable");
+  fn _ready(&self, owner: TRef<Node2D>) {
+    for n in 0..owner.get_child_count() {
+      let node = unsafe { owner.get_child(n.into()).unwrap().assume_safe() };
 
-      for n in 0..nodes.len() {
-        let node: Option<Ref<Object>> = nodes.get(n).try_to_object();
+      if !node.is_in_group("pickable") {
+        continue;
+      };
 
-        if let Some(_node) = node {
-          let safe_node = unsafe { _node.assume_safe() };
-          let variant_array = VariantArray::new_shared();
-
-          unsafe {
-            variant_array.push(_owner);
-            variant_array.push(safe_node.cast::<Node2D>().unwrap().to_variant())
-          }
-          safe_node
-            .connect(
-              GodotString::from_str("clicked"),
-              _owner,
-              GodotString::from_str("_on_pickable_clicked"),
-              variant_array,
-              0,
-            )
-            .ok();
-        }
-      }
+      node
+        .connect(
+          "clicked",
+          owner,
+          "_on_pickable_clicked",
+          VariantArray::new_shared(),
+          0,
+        )
+        .ok();
     }
   }
 
