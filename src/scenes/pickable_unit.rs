@@ -1,13 +1,14 @@
 use gdnative::{
   api::{InputEvent, InputEventMouseButton, Viewport},
+  core_types::OwnedToVariant,
   prelude::{ClassBuilder, Signal},
-  Ref,
+  Ref, TRef,
 };
 use godot::api::GlobalConstants;
 use godot::methods;
-use godot::prelude::{FromVariant, NativeClass, Node2D, ToVariant};
+use godot::prelude::{NativeClass, Reference};
 
-#[derive(Debug, ToVariant, FromVariant)]
+#[derive(Debug)]
 enum RigidBody2DMode {
   Rigid = 0,
   Static = 1,
@@ -15,17 +16,19 @@ enum RigidBody2DMode {
   // Kinematic = 3,
 }
 
-#[derive(Debug, FromVariant, ToVariant, NativeClass)]
-#[inherit(Node2D)]
+#[derive(Debug, NativeClass)]
+#[inherit(Reference)]
 #[register_with(Self::register_signals)]
 pub struct PickableUnit {
+  #[property]
   held: bool,
+  // #[property]
   mode: RigidBody2DMode,
 }
 
 #[methods]
 impl PickableUnit {
-  fn _init(_owner: Node2D) -> Self {
+  fn _init(_owner: Reference) -> Self {
     PickableUnit {
       held: false,
       mode: RigidBody2DMode::Rigid,
@@ -35,7 +38,7 @@ impl PickableUnit {
   #[export]
   fn _input_event(
     &self,
-    owner: &Node2D,
+    owner: &Reference,
     _viewport: Ref<Viewport>,
     event: Ref<InputEvent>,
     _shape_idx: u32,
@@ -43,20 +46,21 @@ impl PickableUnit {
     let ev = unsafe { event.assume_safe() };
     if let Some(e) = ev.cast::<InputEventMouseButton>() {
       if e.button_index() == GlobalConstants::BUTTON_LEFT && e.is_pressed() {
-        owner.emit_signal("clicked", &[self.to_variant()]);
+        let instance = self.emplace();
+        owner.emit_signal("clicked", &[instance.owned_to_variant()]);
       }
     }
   }
 
   #[export]
-  fn _physics_process(&self, owner: &Node2D, _delta: f64) {
+  fn _physics_process(&self, owner: &Reference, _delta: f64) {
     if self.held {
-      owner.set_position(owner.get_global_mouse_position());
+      // owner.set_position(owner.get_global_mouse_position());
     }
   }
 
   #[export]
-  pub fn pickup(&mut self, _owner: &Node2D) {
+  pub fn pickup(&mut self, _owner: TRef<Reference>) {
     if !self.held {
       self.mode = RigidBody2DMode::Static;
       self.held = true;
@@ -64,7 +68,7 @@ impl PickableUnit {
   }
 
   #[export]
-  pub fn drop(&mut self, _owner: &Node2D) {
+  pub fn drop(&mut self, _owner: TRef<Reference>) {
     if self.held {
       self.mode = RigidBody2DMode::Rigid;
       self.held = false;
@@ -73,7 +77,7 @@ impl PickableUnit {
 }
 
 impl PickableUnit {
-  fn new(_owner: &Node2D) -> Self {
+  fn new(_owner: &Reference) -> Self {
     PickableUnit {
       held: false,
       mode: RigidBody2DMode::Rigid,
