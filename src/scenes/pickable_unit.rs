@@ -51,7 +51,7 @@ impl PickableUnit {
   #[export]
   fn _physics_process(&self, owner: &Node2D, _delta: f64) {
     if self.held {
-      owner.set_global_position(owner.get_global_mouse_position());
+      owner.set_position(owner.get_global_mouse_position());
     }
   }
 
