@@ -1,13 +1,17 @@
 extends RigidBody2D
 
 signal clicked(node)
+signal dropped(node)
 
 var held = false
 
 func _input_event(_viewport, event, _shape_idx):
   if event is InputEventMouseButton:
-    if event.button_index == BUTTON_LEFT and event.pressed:
-      emit_signal("clicked", self)
+    match [event.button_index, event.pressed]:
+      [BUTTON_LEFT, true]:
+        emit_signal("clicked", self)
+      [BUTTON_LEFT, false]:
+        emit_signal("dropped", self)
 
 func _physics_process(_delta):
   if held:

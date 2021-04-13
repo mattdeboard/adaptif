@@ -5,6 +5,9 @@
     }
   ],
   "settings": {
+    "gitlens.currentLine.enabled": false, // in modern version
+    "gitlens.codeLens.authors.enabled": false,
+    "gitlens.codeLens.recentChange.enabled": false,
     "editor.formatOnSave": true,
     "editor.tokenColorCustomizations": {
       "[Kimbie Dark]": {

@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://pickable_unit.gdns" type="Script" id=1]
+[ext_resource path="res://scripts/PickableUnit.gd" type="Script" id=1]
 [ext_resource path="res://assets/router.png" type="Texture" id=2]
 
 [sub_resource type="PhysicsMaterial" id=1]
