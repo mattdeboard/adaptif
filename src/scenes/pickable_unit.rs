@@ -1,14 +1,14 @@
+use gdnative::api::GlobalConstants;
+use gdnative::methods;
+use gdnative::prelude::{NativeClass, Reference};
 use gdnative::{
   api::{InputEvent, InputEventMouseButton, Viewport},
   core_types::OwnedToVariant,
   prelude::{ClassBuilder, Signal},
   Ref, TRef,
 };
-use godot::api::GlobalConstants;
-use godot::methods;
-use godot::prelude::{NativeClass, Reference};
 
-#[derive(Debug)]
+#[derive(Copy, Clone, Debug)]
 enum RigidBody2DMode {
   Rigid = 0,
   Static = 1,
@@ -16,19 +16,18 @@ enum RigidBody2DMode {
   // Kinematic = 3,
 }
 
-#[derive(Debug, NativeClass)]
+#[derive(Copy, Clone, NativeClass)]
 #[inherit(Reference)]
 #[register_with(Self::register_signals)]
+// #[no_constructor]
 pub struct PickableUnit {
-  #[property]
   held: bool,
-  // #[property]
   mode: RigidBody2DMode,
 }
 
 #[methods]
 impl PickableUnit {
-  fn _init(_owner: Reference) -> Self {
+  fn new(_owner: &Reference) -> Self {
     PickableUnit {
       held: false,
       mode: RigidBody2DMode::Rigid,
@@ -72,15 +71,6 @@ impl PickableUnit {
     if self.held {
       self.mode = RigidBody2DMode::Rigid;
       self.held = false;
-    }
-  }
-}
-
-impl PickableUnit {
-  fn new(_owner: &Reference) -> Self {
-    PickableUnit {
-      held: false,
-      mode: RigidBody2DMode::Rigid,
     }
   }
 
